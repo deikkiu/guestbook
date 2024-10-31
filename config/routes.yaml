@@ -1,3 +1,20 @@
-homepage:
-    path: /
-    controller: App\Controller\ConferenceController::index
+home:
+  path: /
+  controller: App\Controller\ConferenceController::index
+
+conference:
+  path: /conference/{slug}
+  controller: App\Controller\ConferenceController::show
+
+app_login:
+  path: /login
+  controller: App\Controller\SecurityController::login
+
+app_logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
+
+# admin
+admin:
+  path: /admin
+  controller: App\Controller\Admin\DashboardController::index

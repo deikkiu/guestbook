@@ -1,2 +1,12 @@
 Chapter: Описание структуры данных
 Section: #
+
+Bundles/Tools:
+1. EasyAdmin
+2. Doctrine Paginator
+
+Symfony docs topic:
+1. Event dispatcher
+2. Event subscriber
+3. HasLifecycleCallbacks
+
