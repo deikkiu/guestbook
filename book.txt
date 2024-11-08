@@ -1,5 +1,5 @@
-Chapter: Защита административной панели
-Section: Добавление правил контроля доступа для авторизации
+Chapter: Тестирование
+Section: #
 
 Bundles/Tools:
 1. EasyAdmin

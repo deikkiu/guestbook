@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
+use App\Utils\SpamChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class ConferenceController extends AbstractController
 		return $this->render('conference/index.html.twig');
 	}
 
-	public function show(Request $request, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository): Response
+	public function show(Request $request, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, SpamChecker $checker): Response
 	{
 		$conferenceSlug = $request->get('slug');
 		$conference = $conferenceRepository->findOneBy(['slug' => $conferenceSlug]);
@@ -47,6 +48,18 @@ class ConferenceController extends AbstractController
 			}
 
 			$this->em->persist($comment);
+
+			$context = [
+				'user_ip' => $request->getClientIp(),
+				'user_agent' => $request->headers->get('User-Agent'),
+				'referer' => $request->headers->get('referer'),
+				'permalink' => $request->getUri()
+			];
+
+			if ($checker->getSpamScore($comment, $context) === 2) {
+				throw new \RuntimeException('Blatant spam, go away!');
+			}
+
 			$this->em->flush();
 
 			return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
